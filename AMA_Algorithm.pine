@@ -1,0 +1,55 @@
+//@version=5
+indicator("Kaufman Adaptive Moving Average (KAMA) with Noise Filter", overlay=true)
+
+// Inputs
+tf = input.timeframe("", title="Timeframe (Leave empty for chart TF)", options=["", "1S", "5S", "10S", "30S", "1", "5", "15", "60"])
+src = input.source(close, "Source")
+length = input.int(10, title="ER Length")
+fast_sc = input.int(2, title="Fast SC Length")
+slow_sc = input.int(30, title="Slow SC Length")
+filter_mult = input.float(0.15, title="Filter Multiplier (Higher = Less Trades)")
+er_threshold = input.float(0.1, title="Min Efficiency Ratio (ER) Threshold")
+use_trend_filter = input.bool(true, title="Use Trend Filter (200 EMA)")
+
+// Helper function to calculate KAMA and signals
+calc_kama_signals() =>
+    ema200 = ta.ema(src, 200)
+    change = math.abs(src - src[length])
+    volatility = math.sum(math.abs(src - src[1]), length)
+    er = volatility != 0 ? change / volatility : 0
+    fast_alpha = 2 / (fast_sc + 1)
+    slow_alpha = 2 / (slow_sc + 1)
+    sc = math.pow(er * (fast_alpha - slow_alpha) + slow_alpha, 2)
+    
+    var float kama = na
+    kama := na(kama[1]) ? src : kama[1] + sc * (src - kama[1])
+    filter = filter_mult * ta.stdev(kama - kama[1], length)
+    
+    er_valid = er > er_threshold
+    trend_up = not use_trend_filter or src > ema200
+    trend_down = not use_trend_filter or src < ema200
+    
+    buy = ta.crossover(src, kama + filter) and er_valid and trend_up
+    sell = ta.crossunder(src, kama - filter) and er_valid and trend_down
+    [kama, buy, sell, ema200]
+
+// Execute calculation based on timeframe
+[kama_val, buy_val, sell_val, ema_val] = request.security(
+     syminfo.tickerid,
+     tf == "" ? timeframe.period : tf,
+     calc_kama_signals(),
+     gaps=barmerge.gaps_off,
+     lookahead=barmerge.lookahead_off
+)
+
+// Plotting
+kama_color = kama_val > kama_val[1] ? color.green : color.red
+plot(kama_val, color=kama_color, linewidth=2, title="KAMA")
+plot(use_trend_filter ? ema_val : na, color=color.gray, title="Trend EMA")
+
+plotshape(buy_val, style=shape.triangleup, location=location.belowbar, color=color.green, size=size.small, title="Buy")
+plotshape(sell_val, style=shape.triangledown, location=location.abovebar, color=color.red, size=size.small, title="Sell")
+
+// Alerts
+alertcondition(buy_val, title="KAMA Buy Signal", message="AMA Buy Signal at {{close}}")
+alertcondition(sell_val, title="KAMA Sell Signal", message="AMA Sell Signal at {{close}}")

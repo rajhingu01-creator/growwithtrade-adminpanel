@@ -1,0 +1,5 @@
+{
+  "name": "Trade with Grow",
+  "description": "A full-stack demo trading platform with real-time charts and virtual balance.",
+  "requestFramePermissions": []
+}

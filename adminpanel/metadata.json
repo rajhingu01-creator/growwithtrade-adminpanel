@@ -1,0 +1,5 @@
+{
+  "name": "Trading Admin Panel",
+  "description": "Comprehensive admin dashboard for managing users, transactions, KYC, and platform security.",
+  "requestFramePermissions": []
+}

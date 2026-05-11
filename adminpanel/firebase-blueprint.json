@@ -1,0 +1,102 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile information",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "username": { "type": "string" },
+        "phoneNumber": { "type": "string" },
+        "status": { "type": "string", "enum": ["active", "deactivated"] },
+        "registrationDate": { "type": "string", "format": "date-time" },
+        "lastLogin": { "type": "string", "format": "date-time" },
+        "twoFactorEnabled": { "type": "boolean" }
+      },
+      "required": ["uid", "email", "status", "registrationDate"]
+    },
+    "Transaction": {
+      "title": "Transaction",
+      "description": "Financial transaction",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "mode": { "type": "string", "enum": ["deposit", "withdraw", "trade"] },
+        "currency": { "type": "string" },
+        "amount": { "type": "number" },
+        "status": { "type": "string", "enum": ["pending", "completed", "failed", "rejected"] },
+        "date": { "type": "string", "format": "date-time" },
+        "paymentMethod": { "type": "string" },
+        "details": { "type": "object" }
+      },
+      "required": ["id", "userId", "mode", "currency", "amount", "status", "date"]
+    },
+    "KYC": {
+      "title": "KYC",
+      "description": "KYC verification data",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "idProofUrl": { "type": "string", "format": "uri" },
+        "addressProofUrl": { "type": "string", "format": "uri" },
+        "selfieUrl": { "type": "string", "format": "uri" },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected"] },
+        "adminNotes": { "type": "string" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "status"]
+    },
+    "BankAccount": {
+      "title": "BankAccount",
+      "description": "User bank account details",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "bankName": { "type": "string" },
+        "accountNumber": { "type": "string" },
+        "ifsc": { "type": "string" },
+        "upiId": { "type": "string" },
+        "addedDate": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "bankName", "accountNumber", "addedDate"]
+    },
+    "LoginHistory": {
+      "title": "LoginHistory",
+      "description": "User login history",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "ipAddress": { "type": "string" },
+        "userAgent": { "type": "string" },
+        "location": { "type": "string" }
+      },
+      "required": ["id", "userId", "timestamp", "ipAddress"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "User" },
+      "description": "User documents"
+    },
+    "/transactions/{txId}": {
+      "schema": { "$ref": "Transaction" },
+      "description": "Transaction documents"
+    },
+    "/kyc/{userId}": {
+      "schema": { "$ref": "KYC" },
+      "description": "KYC documents"
+    },
+    "/bank_accounts/{userId}": {
+      "schema": { "$ref": "BankAccount" },
+      "description": "Bank account documents"
+    },
+    "/login_history/{historyId}": {
+      "schema": { "$ref": "LoginHistory" },
+      "description": "Login history documents"
+    }
+  }
+}

@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+@layer utilities {
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #1e293b;
+    border-radius: 10px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #334155;
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    75% { transform: translateX(4px); }
+  }
+  .animate-shake {
+    animation: shake 0.2s ease-in-out 0s 2;
+  }
+
+  .glass-card {
+    background: rgba(22, 26, 30, 0.4);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .cyber-gradient {
+    background: linear-gradient(135deg, #3b82f6 0%, #6366f1 50%, #8b5cf6 100%);
+  }
+
+  .neon-glow-blue {
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+  }
+
+  .neon-glow-emerald {
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.5);
+  }
+
+  .neon-glow-rose {
+    box-shadow: 0 0 15px rgba(244, 63, 94, 0.5);
+  }
+
+  /* Hide TradingView Logo/Branding */
+  a[href*="tradingview.com"], 
+  .tv-logo, 
+  [class*="tv-branding"],
+  div[style*="z-index: 10"] > a[target="_blank"],
+  a[target="_blank"] > svg {
+    display: none !important;
+  }
+}
+  
