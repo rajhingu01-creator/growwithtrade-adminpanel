@@ -2089,9 +2089,7 @@ async function startServer() {
   adminApp.get('*', (req, res) => {
     res.sendFile(path.join(adminDistPath, 'index.html'));
   });
-  
-  // Serve admin panel at root instead of /adminpanel
-  app.use('/', adminApp);
+  app.use('/adminpanel', adminApp);
 
   if (process.env.NODE_ENV !== 'production') {
     const vite = await createViteServer({
@@ -2103,10 +2101,10 @@ async function startServer() {
     });
     app.use(vite.middlewares);
   } else {
-    // In this repo, we only serve the admin panel
-    app.use(express.static(adminDistPath));
+    app.use(express.static(distPath));
     app.get('*', (req, res) => {
-      res.sendFile(path.join(adminDistPath, 'index.html'));
+      if (req.path.startsWith('/adminpanel')) return; // Let the admin panel handler handle it
+      res.sendFile(path.join(distPath, 'index.html'));
     });
   }
 
