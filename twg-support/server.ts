@@ -52,7 +52,8 @@ interface Project {
 }
 
 const projects: Project[] = [
-  { id: '1', name: 'Main Trading Site', apiKey: 'twg_live_8f3k2l9s0a', createdAt: new Date() }
+  { id: '1', name: 'Main Trading Site', apiKey: 'twg_live_8f3k2l9s0a', createdAt: new Date() },
+  { id: '2', name: 'Tradewithgrow', apiKey: 'twg_live_7f2akb6ymt', createdAt: new Date() }
 ];
 
 async function startServer() {
@@ -229,7 +230,7 @@ async function startServer() {
     });
   }
 
-  const PORT = Number(process.env.PORT) || 3000;
+  const PORT = 3002;
   httpServer.listen(PORT, '0.0.0.0', () => {
     console.log(`Server running on http://localhost:${PORT}`);
   });
