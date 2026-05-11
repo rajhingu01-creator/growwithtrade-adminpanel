@@ -161,6 +161,9 @@ const isDbUnavailableError = (error: any) => {
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 
+// Serve public assets (widget.js)
+app.use(express.static('public'));
+
 const JWT_SECRET = process.env.JWT_SECRET || '3613d551578ca0e2ee1d7bc224693f22481eea682c3abb84a7cefe2167a581406baccce3ef54231c7c7eb36a2e526f9be02d47a14b6244426b26356bfe7c0543';
 const NOWPAYMENTS_API_KEY = process.env.NOWPAYMENTS_API_KEY || '';
 const UROPAY_API_KEY = process.env.UROPAY_API_KEY || '';
